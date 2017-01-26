@@ -4,6 +4,7 @@ var async = require('async');
 var exec = require('child_process').exec;
 var _ = require('@sailshq/lodash');
 var jsBeautify = require('js-beautify');
+var walk = require('walk');
 
 var includeAll = require('include-all');
 var Prompts = require('machinepack-prompts');
@@ -37,12 +38,12 @@ module.exports = (function() {
         try {
           return require(path.resolve(projectDir, 'package.json'));
         } catch (e) {
-          return done(new Error('Could not find a package.json in the current folder.  Are you sure this is a Sails project?'));
+          return done(new Error('Could not find a package.json in the current folder.  Are you sure this is a Sails app?'));
         }
       })();
 
       if (!projectPackageJson.dependencies || !projectPackageJson.dependencies.sails) {
-        return done(new Error('This project does not include sails as a dependency.  Are you sure this is a Sails project?'));
+        return done(new Error('This project does not include sails as a dependency.  Are you sure this is a Sails app?'));
       }
 
       // Load up the existing `config/globals.js` file, if any.
@@ -208,7 +209,7 @@ module.exports = (function() {
           Prompts.confirm({
             message: 'Looks like we can remove the following packages: \n\n' +
                       packagesToRemove.join('\n') + '\n\n' +
-                      'These packages are now built-in to Sails.  Removing is strictly optional, but will reduce your project\'s file size.\n\nOkay to remove the packages?'
+                      'These packages are now built-in to Sails.  Removing is strictly optional, but will reduce your app\'s file size.\n\nOkay to remove the packages?'
           }).exec({
             no: function() {
               console.log('Okay, no problem -- we\'ll leave those packages in place!\n');
@@ -238,8 +239,8 @@ module.exports = (function() {
         tasks.push(function(done) {
 
           Prompts.confirm({
-            message: 'In order for your project to lift, your `config/globals.js` file needs to be updated.\n' +
-                     'We can add a new `config/globals_1.0.js` file for now which should allow your project\n'+
+            message: 'In order for your app to lift, your `config/globals.js` file needs to be updated.\n' +
+                     'We can add a new `config/globals_1.0.js` file for now which should allow your app\n'+
                      'to lift, and then when you\'re ready you can copy that file over to `config/globals.js`\n\n'+
                      'See http://bit.ly/sails_migration_checklist for more info.\n\n'+
                      'Create a new `config/globals_1.0.js file now?'
@@ -286,9 +287,9 @@ module.exports = (function() {
       tasks.push(function(done) {
 
         Prompts.confirm({
-          message: 'If your project uses models, you will likely need to update your `config/models.js`\n'+
+          message: 'If your app uses models, you will likely need to update your `config/models.js`\n'+
                    'before lifting with Sails 1.0.  We can add a new `config/models_1.0.js` file for now\n'+
-                   'which should allow your project to lift, and then when you\'re ready you merge that\n'+
+                   'which should allow your app to lift, and then when you\'re ready you merge that\n'+
                    'file with your existing `config/models.js`.\n\n'+
                    'See http://bit.ly/sails_migration_model_config for more info.\n\n'+
                    'Create a new `config/models_1.0.js file now?'
@@ -425,14 +426,185 @@ module.exports = (function() {
           message: 'Okay, that\'s about all we can do automatically.\n\n' +
                    'In the next step, we\'ll do a scan of your code and create a report\n'+
                    'of things that may need to be manually updated for Sails 1.0.\n'+
-                   'This could take a few moments depending on the size of your project.\n\n'+
-                   'Go ahead and scan your project?'
+                   'This could take a few moments depending on the size of your app.\n\n'+
+                   'Go ahead and scan your app?'
         }).exec({
+          error: done,
           no: function() {
             console.log('Okay, no problem.  In that case we\'re done!');
             return done();
           },
           success: function() {
+
+            // Declare a var to hold the report.
+            var report = [];
+
+            // First, do any models have instance methods on them?
+            var modelsWithInstanceMethods = _.reduce(models, function(memo, model) {
+              if (model.attributes && _.any(model.attributes, function(attribute) {
+                return _.isFunction(attribute);
+              })) {
+                memo.push(model.globalId);
+              }
+              return memo;
+            }, []);
+
+            // If so, add something to the report.
+            if (modelsWithInstanceMethods.length) {
+              report.push(
+                '┌┬┐┌─┐┌┬┐┌─┐┬    ┌┬┐┌─┐┌┬┐┬ ┬┌─┐┌┬┐┌─┐\n'+
+                '││││ │ ││├┤ │    │││├┤  │ ├─┤│ │ ││└─┐\n'+
+                '┴ ┴└─┘─┴┘└─┘┴─┘  ┴ ┴└─┘ ┴ ┴ ┴└─┘─┴┘└─┘'
+              );
+              report.push('In Sails 1.0, models may not longer have instance methods (including `toJSON`).\n'+
+                          'You\'ll need to remove instance methods from the following models:\n\n'+
+                          _.map(modelsWithInstanceMethods, function(modelName) { return '* ' + modelName; }).join('\n'));
+            }
+
+            // Alright, let's take a look at the views config.
+            var viewsConfig = (function() {
+              try {
+                return require(path.resolve(projectDir, 'config', 'views')).views;
+              } catch (e) {
+                return {};
+              }
+            })();
+
+            // If it has an `engine` other than `ejs`, add it to the report.
+            if (viewsConfig.engine && viewsConfig.engine !== 'ejs') {
+              report.push(
+                '┬  ┬┬┌─┐┬ ┬  ┌─┐┌┐┌┌─┐┬┌┐┌┌─┐┌─┐\n'+
+                '└┐┌┘│├┤ │││  ├┤ ││││ ┬││││├┤ └─┐\n'+
+                ' └┘ ┴└─┘└┴┘  └─┘┘└┘└─┘┴┘└┘└─┘└─┘'
+              );
+              report.push('It looks like you\'re using the `' + viewsConfig.engine + '` view engine.\n'+
+                          'Configuration for view engines has changed in Sails 1.0, so you\'ll want to\n'+
+                          'update your `config/views.js` file accordingly.\n\n'+
+                          'See http://bit.ly/sails_migration_views for more info.');
+            }
+
+            // Get a list of `collection` attributes in models so we can look for `.add` and `.remove` calls.
+            var collectionAttributes = _.reduce(models, function(memo, model) {
+              _.each(model.attributes, function(attribute, name) {
+                if (attribute.collection) {memo.push(name);}
+              });
+              return memo;
+            }, []);
+            collectionAttributes = _.uniq(collectionAttributes);
+
+            var addRegex = new RegExp('\\.(' + collectionAttributes.join('|') + ')\\.add\\(');
+            var removeRegex = new RegExp('\\.(' + collectionAttributes.join('|') + ')\\.remove\\(');
+
+            // Set up various subreports
+            var addRemoveSaveCalls = [];
+            var csrfTokenPathRefs = false;
+
+            // Start walking the codez
+            var walker = walk.walk(projectDir, { filters: ['node_modules', '.tmp'] });
+
+            // For each file...
+            walker.on('file', function (root, stats, next) {
+
+              var relativeRoot = root.replace(projectDir, '').replace(new RegExp('^' + path.sep), '');
+
+              // If it's not a Javascript file, skip it.
+              if (!stats.name.match(/\.js$/)) {
+                 return next();
+              }
+
+              // Read the file in.
+              var file;
+              try {
+                file = Filesystem.readSync({source: path.join(root, stats.name)}).execSync().split('\n');
+              }
+              catch (e) {
+                return next();
+              }
+
+              // Loop through each line of the file
+              _.each(file, function(line, lineNum) {
+
+                // If it's not an asset file, look for `.add` or `.remove` calls.
+                if (!root.match(path.join(projectDir, 'assets'))) {
+                  if (line.match(addRegex)) {
+                    addRemoveSaveCalls.push('.add() in ' + path.join(relativeRoot, stats.name) + ':' + (lineNum + 1));
+                  }
+                  if (line.match(removeRegex)) {
+                    addRemoveSaveCalls.push('.remove() in ' + path.join(relativeRoot, stats.name) + ':' + (lineNum + 1));
+                  }
+                  if (line.match('\\.save\\(')) {
+                    addRemoveSaveCalls.push('.save() in ' + path.join(relativeRoot, stats.name) + ':' + (lineNum + 1));
+                  }
+
+                }
+
+                // Look for references to `/csrfToken` (that aren't commented out)
+                if (line.match('/csrfToken') && !line.match(/^\s*\/\//) && !line.match(/^\s*\*/)) {
+                  csrfTokenPathRefs = true;
+                }
+
+              });
+
+
+              return next();
+
+            });
+
+            walker.on('end', function() {
+
+              if (addRemoveSaveCalls.length) {
+                report.push(
+                  '┌─┐┌┬┐┌┬┐   ┬─┐┌─┐┌┬┐┌─┐┬  ┬┌─┐  ┌─┐┌┐┌┌┬┐  ┌─┐┌─┐┬  ┬┌─┐  ┌┬┐┌─┐┌┬┐┬ ┬┌─┐┌┬┐┌─┐\n'+
+                  '├─┤ ││ ││   ├┬┘├┤ ││││ │└┐┌┘├┤   ├─┤│││ ││  └─┐├─┤└┐┌┘├┤   │││├┤  │ ├─┤│ │ ││└─┐\n'+
+                  '┴ ┴─┴┘─┴┘┘  ┴└─└─┘┴ ┴└─┘ └┘ └─┘  ┴ ┴┘└┘─┴┘  └─┘┴ ┴ └┘ └─┘  ┴ ┴└─┘ ┴ ┴ ┴└─┘─┴┘└─┘'
+                );
+                report.push('In Sails 1.0, records no longer support .add() and .remove() for adding and removing\n'+
+                            'child records in a collection attribute.  Records also don\'t support the .save() method.\n'+
+                            'Instead, use the model class methods\n'+
+                            '`.update()`, `.addToCollection()`, `.removeFromCollection()` and `.replaceCollection()`.\n\n'+
+                            'Found the following possible references to `.add()`, `.remove() and `.save()`:\n\n'+
+                            _.map(addRemoveSaveCalls, function(reference) { return '* ' + reference; }).join('\n') + '\n\n' +
+                            'See the reference docs for more info:\n'+
+                            '.update(): https://sailsjs.com/docs/reference/waterline/models/update\n'+
+                            '.addToCollection(): https://sailsjs.com/docs/reference/waterline/models/addToCollection\n'+
+                            '.removeFromCollection(): https://sailsjs.com/docs/reference/waterline/models/removeFromCollection\n'+
+                            '.replaceCollection(): https://sailsjs.com/docs/reference/waterline/models/replaceCollection'
+                            );
+              }
+
+              if (report.length) {
+                report.unshift(
+                  '██████╗ ███████╗██████╗  ██████╗ ██████╗ ████████╗\n'+
+                  '██╔══██╗██╔════╝██╔══██╗██╔═══██╗██╔══██╗╚══██╔══╝\n'+
+                  '██████╔╝█████╗  ██████╔╝██║   ██║██████╔╝   ██║   \n'+
+                  '██╔══██╗██╔══╝  ██╔═══╝ ██║   ██║██╔══██╗   ██║   \n'+
+                  '██║  ██║███████╗██║     ╚██████╔╝██║  ██║   ██║   \n'+
+                  '╚═╝  ╚═╝╚══════╝╚═╝      ╚═════╝ ╚═╝  ╚═╝   ╚═╝   \n'+
+                  '\n'+
+                  '==================================================\n'
+                );
+
+                Filesystem.writeSync({
+                  string: report.join('\n\n'),
+                  destination: path.resolve(projectDir, 'sails_1.0_migration_report.txt'),
+                  force: true
+                }).execSync();
+
+
+                console.log('Saved migration report to ' + path.resolve(projectDir, 'sails_1.0_migration_report.txt') + '!');
+              }
+              else {
+                console.log('The scanner didn\'t have anything to report -- you\'re in good shape!');
+              }
+              console.log('\n\nThe migration utility has completed!');
+              console.log('Next steps:');
+              console.log('* Review the full migration guide at: https://github.com/balderdashy/sails-docs/blob/1.0/upgrading/To1.0.md#views');
+              console.log('* Attempt to lift and run your app with Sails 1.0.');
+              console.log('* See http://sailsjs.com/support for support options!');
+              return done();
+            });
+
+
 
           }
 
