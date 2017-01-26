@@ -185,49 +185,48 @@ module.exports = (function() {
       //  ┴└─└─┘┴ ┴└─┘ └┘ └─┘  ┴  ┴ ┴└─┘┴ ┴┴ ┴└─┘└─┘└─┘
 
       // Get an array of packages we can remove.
-      var packagesToRemove = _.intersection(_.keys(projectPackageJson.dependencies), [
-        // 'ejs',
-        'grunt',
-        'grunt-contrib-clean',
-        'grunt-contrib-coffee',
-        'grunt-contrib-concat',
-        'grunt-contrib-copy',
-        'grunt-contrib-cssmin',
-        'grunt-contrib-jst',
-        'grunt-contrib-less',
-        'grunt-contrib-uglify',
-        'grunt-contrib-watch',
-        'grunt-sails-linker',
-        'grunt-sync',
-        'sails-disk'
-      ]);
+      // var packagesToRemove = _.intersection(_.keys(projectPackageJson.dependencies), [
+      //   // 'ejs',
+      //   'grunt-contrib-clean',
+      //   'grunt-contrib-coffee',
+      //   'grunt-contrib-concat',
+      //   'grunt-contrib-copy',
+      //   'grunt-contrib-cssmin',
+      //   'grunt-contrib-jst',
+      //   'grunt-contrib-less',
+      //   'grunt-contrib-uglify',
+      //   'grunt-contrib-watch',
+      //   'grunt-sails-linker',
+      //   'grunt-sync',
+      //   'sails-disk'
+      // ]);
 
-      // If we have stuff to install, confirm with the user, and then do it.
-      if (packagesToRemove.length) {
+      // // If we have stuff to install, confirm with the user, and then do it.
+      // if (packagesToRemove.length) {
 
-        tasks.push(function(done) {
-          Prompts.confirm({
-            message: 'Looks like we can remove the following packages: \n\n' +
-                      packagesToRemove.join('\n') + '\n\n' +
-                      'These packages are now built-in to Sails.  Removing is strictly optional, but will reduce your app\'s file size.\n\nOkay to remove the packages?'
-          }).exec({
-            no: function() {
-              console.log('Okay, no problem -- we\'ll leave those packages in place!\n');
-              return done();
-            },
-            success: function() {
-              console.log('Okay -- removing now!\n');
-              async.eachSeries(packagesToRemove, function(package, cb) {
-                console.log('Removing ' + package + '...');
-                exec('npm uninstall ' + package + ' --save', {cwd: projectDir}, cb);
-              }, done);
-            },
-            error: done
-          });
+      //   tasks.push(function(done) {
+      //     Prompts.confirm({
+      //       message: 'Looks like we can remove the following packages: \n\n' +
+      //                 packagesToRemove.join('\n') + '\n\n' +
+      //                 'These packages are now built-in to Sails.  Removing is strictly optional, but will reduce your app\'s file size.\n\nOkay to remove the packages?'
+      //     }).exec({
+      //       no: function() {
+      //         console.log('Okay, no problem -- we\'ll leave those packages in place!\n');
+      //         return done();
+      //       },
+      //       success: function() {
+      //         console.log('Okay -- removing now!\n');
+      //         async.eachSeries(packagesToRemove, function(package, cb) {
+      //           console.log('Removing ' + package + '...');
+      //           exec('npm uninstall ' + package + ' --save', {cwd: projectDir}, cb);
+      //         }, done);
+      //       },
+      //       error: done
+      //     });
 
-        });
+      //   });
 
-      }
+      // }
 
       //  ┌─┐┬  ┌─┐┌┐ ┌─┐┬    ┌─┐┌─┐┌┐┌┌─┐┬┌─┐
       //  │ ┬│  │ │├┴┐├─┤│    │  │ ││││├┤ ││ ┬
