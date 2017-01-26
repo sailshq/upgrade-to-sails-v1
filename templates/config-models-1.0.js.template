@@ -1,0 +1,50 @@
+/**
+ * THIS FILE WAS ADDED AUTOMATICALLY by the Sails 1.0 app migration tool.
+ * IT SHOULD BE MERGED into your existing config/models.js file as soon as possible.
+ */
+
+module.exports.models = {
+
+  // These settings make the .update(), .create() and .createEach()
+  // work like they did in 0.12, by returning records in the callback.
+  // This is pretty ineffecient, so if you don't _always_ need this feature, you
+  // should turn these off and instead chaing `.meta({fetch: true})` onto the
+  // individual calls where you _do_ need records returned.
+  fetchRecordsOnUpdate: true,
+  fetchRecordsOnCreate: true,
+  fetchRecordsOnCreateEach: true,
+
+  // Fetching records on destroy was experimental, but if you were using it,
+  // uncomment the next line.
+  // fetchRecordsOnDestroy: true,
+
+  // The former `connection` model setting is now `datastore`.  This sets the datastore
+  // that models will use, unless overridden directly in the model file in `api/models`.
+  // It defaults to a datastore called `default`, which uses the built-in 'sails-disk' adapter.
+  datastore: '<%= datastore %>',
+
+  // Because you can't have the old `connection` setting at the same time as the new
+  // `datastore` setting, we'll set it to `null` here.  When you merge this file into your
+  // existing `config/models.js` file, just remove any reference to `connection`.
+  connection: null,
+
+  // In Sails 1.0, the `autoPK`, `autoCreatedAt` and `autoUpdatedAt` model settings
+  // have been removed.  Instead, you choose which attributes (if any) to use as
+  // primary keys and timestamps.  There is also a `primaryKey` model setting which
+  // indicates which attribute is used as the primary key -- it defaults to `id`,
+  // so we don't need to set it here.
+  attributes: {
+    createdAt: { type: 'number', autoCreatedAt: true, },
+    updatedAt: { type: 'number', autoUpdatedAt: true, },
+    id: { type: 'number', autoIncrement: true, },
+    //--------------------------------------------------------------------------
+    //  /\   Using MongoDB?
+    //  ||   Replace `id` above with this instead:
+    //
+    // ```
+    // id: { type: 'string', columnName: '_id' },
+    // ```
+    //--------------------------------------------------------------------------
+  }
+
+};

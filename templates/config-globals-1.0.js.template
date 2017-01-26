@@ -1,0 +1,16 @@
+/**
+ * THIS FILE WAS ADDED AUTOMATICALLY by the Sails 1.0 app migration tool.
+ * IT SHOULD BE MERGED into your existing config/globals.js file as soon as possible.
+ */
+
+ module.exports.globals = {
+
+   _: <%= lodashVal %>,
+
+   async: <%= asyncVal %>,
+
+   models: <%= modelsVal %>,
+
+   sails: <%= sailsVal %>
+
+ };
