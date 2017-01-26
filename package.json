@@ -1,13 +1,10 @@
 {
   "name": "sails-generate-migrate-app",
   "version": "1.0.0",
-  "description": "",
+  "description": "A tool to help migrate Sails apps to version 1.0",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
+  "author": "sgress454",
+  "license": "MIT",
   "dependencies": {
     "@sailshq/lodash": "^3.10.2",
     "async": "2.1.4",

@@ -591,16 +591,19 @@ module.exports = (function() {
                 }).execSync();
 
 
+                console.log();
+                console.log('--------------------------------------------------------------------------------------------------------');
                 console.log('Saved migration report to ' + path.resolve(projectDir, 'sails_1.0_migration_report.txt') + '!');
+                console.log('--------------------------------------------------------------------------------------------------------');
               }
               else {
                 console.log('The scanner didn\'t have anything to report -- you\'re in good shape!');
               }
-              console.log('\n\nThe migration utility has completed!');
+              console.log('\nThe migration utility has completed!\n');
               console.log('Next steps:');
-              console.log('* Review the full migration guide at: https://github.com/balderdashy/sails-docs/blob/1.0/upgrading/To1.0.md#views');
+              console.log('* Review the full migration guide at: https://github.com/balderdashy/sails-docs/blob/1.0/upgrading/To1.0.md');
               console.log('* Attempt to lift and run your app with Sails 1.0.');
-              console.log('* See http://sailsjs.com/support for support options!');
+              console.log('* See http://sailsjs.com/support for support options!\n');
               return done();
             });
 
