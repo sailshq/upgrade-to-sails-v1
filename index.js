@@ -154,7 +154,7 @@ module.exports = (function() {
 
         tasks.push(function(done) {
           var packageList = _.map(packagesToInstall, function(ver, package) {
-            return package + '@' + ver;
+            return package + '@' + ver.replace(/-0$/,'');
           }).join('\n');
           Prompts.confirm({
             message: 'Looks like we need to install the following packages: \n\n' +
@@ -169,7 +169,7 @@ module.exports = (function() {
               console.log('Okay -- installing now!\n');
               async.eachSeries(_.keys(packagesToInstall), function(package, cb) {
                 var version = packagesToInstall[package];
-                console.log('Installing ' + package + '@' + version + '...');
+                console.log('Installing ' + package + '@' + version.replace(/-0$/,'') + '...');
                 exec('npm install ' + package + '@' + version + ' --save' + (version[0] !== '^' ? ' --save-exact' : ''), {cwd: projectDir}, cb);
               }, done);
             },
