@@ -457,7 +457,7 @@ module.exports = (function() {
               );
               report.push('In Sails 1.0, models may not longer have instance methods (including `toJSON`).\n'+
                           'You\'ll need to remove instance methods from the following models:\n\n'+
-                          _.map(modelsWithInstanceMethods, function(modelName) { return '* ' + modelName; }).join('\n'));
+                          _.map(modelsWithInstanceMethods, function(modelName) { return '* "' + modelName + '" in api/models/'+modelName+'.js'; }).join('\n'));
             }
 
             // Alright, let's take a look at the views config.
