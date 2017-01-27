@@ -583,6 +583,7 @@ module.exports = (function() {
                   '==================================================\n'
                 );
 
+                // Save the report to disk.
                 Filesystem.writeSync({
                   string: report.join('\n\n'),
                   destination: path.resolve(projectDir, 'sails_1.0_migration_report.txt'),
@@ -590,9 +591,11 @@ module.exports = (function() {
                 }).execSync();
 
 
+                // Output the report to the console.
+                console.log(report.join('\n\n'));
                 console.log();
                 console.log('--------------------------------------------------------------------------------------------------------');
-                console.log('Saved migration report to ' + path.resolve(projectDir, 'sails_1.0_migration_report.txt') + '!');
+                console.log('Saved this migration report to ' + path.resolve(projectDir, 'sails_1.0_migration_report.txt') + '!');
                 console.log('--------------------------------------------------------------------------------------------------------');
               }
               else {
