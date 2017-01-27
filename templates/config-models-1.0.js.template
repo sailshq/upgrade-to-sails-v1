@@ -28,14 +28,20 @@ module.exports.models = {
   // existing `config/models.js` file, just remove any reference to `connection`.
   connection: null,
 
-  // In Sails 1.0, the `autoPK`, `autoCreatedAt` and `autoUpdatedAt` model settings
-  // have been removed.  Instead, you choose which attributes (if any) to use as
-  // primary keys and timestamps.  There is also a `primaryKey` model setting which
-  // indicates which attribute is used as the primary key -- it defaults to `id`,
-  // so we don't need to set it here.
+  // These attributes will be added to all of your models.  When you create a new Sails 1.0
+  // app with "sails new", a similar configuration will be generated for you.
   attributes: {
-    createdAt: { type: 'number', autoCreatedAt: true, },
-    updatedAt: { type: 'number', autoUpdatedAt: true, },
+    // In Sails 1.0, the `autoCreatedAt` and `autoUpdatedAt` model settings
+    // have been removed.  Instead, you choose which attributes (if any) to use as
+    // timestamps.  By default, "sails new" will generate these two attributes as numbers,
+    // giving you the most flexibility.  But for compatibility with your existing project,
+    // we'll define them as strings.
+    createdAt: { type: 'string', autoCreatedAt: true, },
+    updatedAt: { type: 'string', autoUpdatedAt: true, },
+  // In Sails 1.0, the primary key field is no longer created for you, and `autoPK` is
+  // not a valid model option.  Instead, you define it yourself and tell Sails which
+  // attribute to use as the primary key by setting the `primaryKey` setting on the model.
+  // That setting defaults to `id`.
     id: { type: 'number', autoIncrement: true, },
     //--------------------------------------------------------------------------
     //  /\   Using MongoDB?
