@@ -538,11 +538,10 @@ module.exports = (function() {
 
             // For each file...
             walker.on('file', function (root, stats, next) {
-
               var relativeRoot = root.replace(projectDir, '').replace(new RegExp('^' + path.sep), '');
 
-              // If it's not a Javascript file, skip it.
-              if (!stats.name.match(/\.js$/)) {
+              // If it's not a Javascript or EJS file, skip it.
+              if (!stats.name.match(/\.(js|ejs)$/)) {
                  return next();
               }
 
@@ -559,7 +558,7 @@ module.exports = (function() {
               _.each(file, function(line, lineNum) {
 
                 // If it's not an asset file, look for `.add` or `.remove` calls.
-                if (!root.match(path.join(projectDir, 'assets'))) {
+                if (!root.match(path.join(projectDir, 'assets')) && !stats.name.match('\.ejs$')) {
                   if (line.match(addRegex)) {
                     addRemoveSaveCalls.push('.add() in ' + path.join(relativeRoot, stats.name) + ':' + (lineNum + 1));
                   }
