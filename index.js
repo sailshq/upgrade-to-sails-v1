@@ -11,6 +11,8 @@ var includeAll = require('include-all');
 var Prompts = require('machinepack-prompts');
 var Filesystem = require('machinepack-fs');
 
+var INVALID_VALIDATIONS = require('./invalid-validations');
+
 module.exports = (function() {
 
   // Get the project directory.
@@ -475,13 +477,29 @@ module.exports = (function() {
                           'See http://bit.ly/sails_migration_views for more info.');
             }
 
-            // Get a list of `collection` attributes in models so we can look for `.add` and `.remove` calls.
-            var collectionAttributes = _.reduce(models, function(memo, model) {
+            // Declare a var to hold a list of `collection` attributes in models
+            // so we can look for `.add` and `.remove` calls.
+            var collectionAttributes = [];
+            // Declare a var to hold a report of model attributes with outdated validations.
+            var outdatedValidationsReport = {};
+
+            // Loop over the models and look for trouble.
+            _.each(models, function(model) {
+
+              // Loop over each model attribute
               _.each(model.attributes, function(attribute, name) {
-                if (attribute.collection) {memo.push(name);}
+                // If the attribute is a collection, add it to the `collectionAttributes` list.
+                if (attribute.collection) {collectionAttributes.push(name);}
+                // If the attribute has any out-of-date validations, record them.
+                var outdatedValidations = _.intersection(_.keys(INVALID_VALIDATIONS), _.keys(attribute));
+                if (outdatedValidations.length) {
+                  outdatedValidationsReport[model.globalId] = outdatedValidationsReport[model.globalId] || {};
+                  outdatedValidationsReport[model.globalId][name] = outdatedValidations;
+                }
               });
-              return memo;
-            }, []);
+
+            });
+
             collectionAttributes = _.uniq(collectionAttributes);
 
             var addRegex = new RegExp('\\.(' + collectionAttributes.join('|') + ')\\.add\\(');
@@ -543,6 +561,21 @@ module.exports = (function() {
             });
 
             walker.on('end', function() {
+
+              if (_.keys(outdatedValidationsReport).length > 0) {
+                report.push(figlet.textSync('validations', {font: 'Calvin S'}));
+                report.push('The following model attributes contain validations that are no longer supported in Sails 1.0.\n' +
+                            'It\'s recommended that you replace them with a `custom` (or if possible, `regex`) validation.\n' +
+                            'See http://sailsjs.com/docs/concepts/models-and-orm/validations for the current list of\n'+
+                            'supported validations and info on how to use `custom` and `regex`.\n');
+                _.each(outdatedValidationsReport, function(attributes, model) {
+                  report.push('* In model `' + model + '` (api/models/' + model + '.js):');
+                  _.each(attributes, function(validations, attribute) {
+                    report.push('   + `'  + attribute + '` attribute (' + validations.join(', ') + ')');
+                  });
+
+                });
+              }
 
               if (addRemoveSaveCalls.length) {
                 report.push(figlet.textSync('add, remove and save methods', {font: 'Calvin S'}));
