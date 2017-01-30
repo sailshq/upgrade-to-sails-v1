@@ -5,6 +5,7 @@ var exec = require('child_process').exec;
 var _ = require('@sailshq/lodash');
 var jsBeautify = require('js-beautify');
 var walk = require('walk');
+var figlet = require('figlet');
 
 var includeAll = require('include-all');
 var Prompts = require('machinepack-prompts');
@@ -450,11 +451,7 @@ module.exports = (function() {
 
             // If so, add something to the report.
             if (modelsWithInstanceMethods.length) {
-              report.push(
-                '┌┬┐┌─┐┌┬┐┌─┐┬    ┌┬┐┌─┐┌┬┐┬ ┬┌─┐┌┬┐┌─┐\n'+
-                '││││ │ ││├┤ │    │││├┤  │ ├─┤│ │ ││└─┐\n'+
-                '┴ ┴└─┘─┴┘└─┘┴─┘  ┴ ┴└─┘ ┴ ┴ ┴└─┘─┴┘└─┘'
-              );
+              report.push(figlet.textSync('model methods', {font: 'Calvin S'}));
               report.push('In Sails 1.0, models may not longer have instance methods (including `toJSON`).\n'+
                           'You\'ll need to remove instance methods from the following models:\n\n'+
                           _.map(modelsWithInstanceMethods, function(modelName) { return '* "' + modelName + '" in api/models/'+modelName+'.js'; }).join('\n'));
@@ -471,11 +468,7 @@ module.exports = (function() {
 
             // If it has an `engine` other than `ejs`, add it to the report.
             if (viewsConfig.engine && viewsConfig.engine !== 'ejs') {
-              report.push(
-                '┬  ┬┬┌─┐┬ ┬  ┌─┐┌┐┌┌─┐┬┌┐┌┌─┐┌─┐\n'+
-                '└┐┌┘│├┤ │││  ├┤ ││││ ┬││││├┤ └─┐\n'+
-                ' └┘ ┴└─┘└┴┘  └─┘┘└┘└─┘┴┘└┘└─┘└─┘'
-              );
+              report.push(figlet.textSync('view engines', {font: 'Calvin S'}));
               report.push('It looks like you\'re using the `' + viewsConfig.engine + '` view engine.\n'+
                           'Configuration for view engines has changed in Sails 1.0, so you\'ll want to\n'+
                           'update your `config/views.js` file accordingly.\n\n'+
@@ -552,11 +545,7 @@ module.exports = (function() {
             walker.on('end', function() {
 
               if (addRemoveSaveCalls.length) {
-                report.push(
-                  '┌─┐┌┬┐┌┬┐   ┬─┐┌─┐┌┬┐┌─┐┬  ┬┌─┐  ┌─┐┌┐┌┌┬┐  ┌─┐┌─┐┬  ┬┌─┐  ┌┬┐┌─┐┌┬┐┬ ┬┌─┐┌┬┐┌─┐\n'+
-                  '├─┤ ││ ││   ├┬┘├┤ ││││ │└┐┌┘├┤   ├─┤│││ ││  └─┐├─┤└┐┌┘├┤   │││├┤  │ ├─┤│ │ ││└─┐\n'+
-                  '┴ ┴─┴┘─┴┘┘  ┴└─└─┘┴ ┴└─┘ └┘ └─┘  ┴ ┴┘└┘─┴┘  └─┘┴ ┴ └┘ └─┘  ┴ ┴└─┘ ┴ ┴ ┴└─┘─┴┘└─┘'
-                );
+                report.push(figlet.textSync('add, remove and save methods', {font: 'Calvin S'}));
                 report.push('In Sails 1.0, records no longer support .add() and .remove() for adding and removing\n'+
                             'child records in a collection attribute.  Records also don\'t support the .save() method.\n'+
                             'Instead, use the model class methods\n'+
@@ -572,13 +561,9 @@ module.exports = (function() {
               }
 
               if (report.length) {
+
                 report.unshift(
-                  '██████╗ ███████╗██████╗  ██████╗ ██████╗ ████████╗\n'+
-                  '██╔══██╗██╔════╝██╔══██╗██╔═══██╗██╔══██╗╚══██╔══╝\n'+
-                  '██████╔╝█████╗  ██████╔╝██║   ██║██████╔╝   ██║   \n'+
-                  '██╔══██╗██╔══╝  ██╔═══╝ ██║   ██║██╔══██╗   ██║   \n'+
-                  '██║  ██║███████╗██║     ╚██████╔╝██║  ██║   ██║   \n'+
-                  '╚═╝  ╚═╝╚══════╝╚═╝      ╚═════╝ ╚═╝  ╚═╝   ╚═╝   \n'+
+                  figlet.textSync('Report', {font: 'ANSI Shadow'}) +
                   '\n'+
                   '==================================================\n'
                 );

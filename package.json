@@ -8,6 +8,7 @@
   "dependencies": {
     "@sailshq/lodash": "^3.10.2",
     "async": "2.1.4",
+    "figlet": "1.2.0",
     "include-all": "^2.0.0",
     "js-beautify": "1.6.8",
     "machinepack-fs": "^8.0.2",
