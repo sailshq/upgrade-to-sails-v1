@@ -571,6 +571,14 @@ module.exports = (function() {
 
             walker.on('end', function() {
 
+              if (csrfTokenPathRefs === true) {
+                report.push(figlet.textSync('csrfToken route', {font: 'Calvin S'}));
+                report.push('In Sails 1.0, the /csrfToken route is no longer added automatically.\n' +
+                            'It looks like you\'re using that route in one or more places, so be sure to add it\n' +
+                            'to your `config/routes.js` file as:\n\n'+
+                            '\'GET /csrfToken\': { action: \'security/grant-csrf-token\' }');
+              }
+
               if (_.keys(outdatedValidationsReport).length > 0) {
                 report.push(figlet.textSync('validations', {font: 'Calvin S'}));
                 report.push('The following model attributes contain validations that are no longer supported in Sails 1.0.\n' +
