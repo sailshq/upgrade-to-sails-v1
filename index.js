@@ -323,9 +323,12 @@ module.exports = (function() {
             // Get the template for the new globals config file.
             var modelsConfigTemplate = Filesystem.readSync({source: path.resolve(__dirname, 'templates', 'config-models-1.0.js.template')}).execSync();
 
+            // Get the default datastore config.
+            var defaultDatastoreConfig = modelsConfig.connection && connectionsConfig[modelsConfig.connection];
+
             // Fill out the template with the appropriate values based on the project's existing global config.
             var newModelsConfig = _.template(modelsConfigTemplate)({
-              datastore: (modelsConfig.connection !== 'localDiskDb' ? modelsConfig.connection : 'default') || 'default'
+              pkConfig: defaultDatastoreConfig && defaultDatastoreConfig.adapter === 'sails-mongo' ? '{ type: \'string\', columnName: \'_id\' }' : '{ type: \'number\', autoIncrement: true, }'
             });
 
             try {
@@ -398,7 +401,8 @@ module.exports = (function() {
               // Build up a datastores dictionary
               var datastoresStr = _.reduce(datastoresInUse, function(memo, datastoreInUse) {
                 if (connectionsConfig[datastoreInUse]) {
-                  memo.push('\'' + datastoreInUse + '\': ' + require('util').inspect(connectionsConfig[datastoreInUse], {depth: null}));
+                  var datastoreName = (modelsConfig.connection && datastoreInUse === modelsConfig.connection) ? 'default' : datastoreInUse;
+                  memo.push('\'' + datastoreName + '\': ' + require('util').inspect(connectionsConfig[datastoreInUse], {depth: null}));
                 }
                 return memo;
               }, []).join(',\n');
