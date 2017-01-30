@@ -258,7 +258,14 @@ module.exports = (function() {
                 source: path.resolve(projectDir, 'config', 'globals.js'),
                 destination: path.resolve(projectDir, 'config', 'globals-old.js.txt')
               }).exec(function(err) {
-                if (err) {return done(err);}
+                if (err) {
+                  if (err.code === 'EEXIST') {
+                    console.log('Detected an existing backed-up globals file, so keeping that one...');
+                  } else {
+                    return done(err);
+                  }
+                }
+
 
                 // Get the template for the new globals config file.
                 var globalsTemplate = Filesystem.readSync({source: path.resolve(__dirname, 'templates', 'config-globals-1.0.js.template')}).execSync();
@@ -413,6 +420,14 @@ module.exports = (function() {
                   source: path.resolve(projectDir, 'config', 'connections.js'),
                   destination: path.resolve(projectDir, 'config', 'connections-old.js.txt')
                 }).exec(function(err) {
+                  if (err) {
+                    if (err.code === 'EEXIST') {
+                      console.log('Detected an existing backed-up globals file, so keeping that one...');
+                    } else {
+                      return done(err);
+                    }
+                  }
+
                   return done();
                 });
               } catch (e) {
