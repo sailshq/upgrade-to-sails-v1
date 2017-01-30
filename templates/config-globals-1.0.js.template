@@ -1,6 +1,6 @@
 /**
  * THIS FILE WAS ADDED AUTOMATICALLY by the Sails 1.0 app migration tool.
- * IT SHOULD BE MERGED into your existing config/globals.js file as soon as possible.
+ * The original file was backed up as `config/globals-old.js.txt`
  */
 
  module.exports.globals = {

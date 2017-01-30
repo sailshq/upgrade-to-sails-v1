@@ -242,38 +242,47 @@ module.exports = (function() {
 
           Prompts.confirm({
             message: 'In order for your app to lift, your `config/globals.js` file needs to be updated.\n' +
-                     'We can add a new `config/globals_1.0.js` file for now which should allow your app\n'+
-                     'to lift, and then when you\'re ready you can copy that file over to `config/globals.js`\n\n'+
+                     'We can update it for you (and back up your original file).\n'+
                      'See http://bit.ly/sails_migration_checklist for more info.\n\n'+
-                     'Create a new `config/globals_1.0.js file now?'
+                     'Update `config/globals.js` file now?'
           }).exec({
             no: function() {
               console.log('Okay, but your app may not lift without it!\n');
               return done();
             },
             success: function() {
-              console.log('Okay -- creating now!\n');
-              // Get the template for the new globals config file.
-              var globalsTemplate = Filesystem.readSync({source: path.resolve(__dirname, 'templates', 'config-globals-1.0.js.template')}).execSync();
+              console.log('Okay -- updating now!\n');
 
-              // Fill out the template with the appropriate values based on the project's existing global config.
-              var newGlobalsConfig = _.template(globalsTemplate)({
-                lodashVal: globalsConfig._ === false ? false : 'require(\'lodash\')',
-                asyncVal: globalsConfig.async === false ? false : 'require(\'async\')',
-                modelsVal: globalsConfig.models === false ? false : true,
-                sailsVal: globalsConfig.sails === false ? false : true
+              // Back up original file
+              Filesystem.mv({
+                source: path.resolve(projectDir, 'config', 'globals.js'),
+                destination: path.resolve(projectDir, 'config', 'globals-old.js.txt')
+              }).exec(function(err) {
+                if (err) {return done(err);}
+
+                // Get the template for the new globals config file.
+                var globalsTemplate = Filesystem.readSync({source: path.resolve(__dirname, 'templates', 'config-globals-1.0.js.template')}).execSync();
+
+                // Fill out the template with the appropriate values based on the project's existing global config.
+                var newGlobalsConfig = _.template(globalsTemplate)({
+                  lodashVal: globalsConfig._ === false ? false : 'require(\'lodash\')',
+                  asyncVal: globalsConfig.async === false ? false : 'require(\'async\')',
+                  modelsVal: globalsConfig.models === false ? false : true,
+                  sailsVal: globalsConfig.sails === false ? false : true
+                });
+
+                try {
+                  Filesystem.writeSync({
+                    string: newGlobalsConfig,
+                    destination: path.resolve(projectDir, 'config', 'globals.js'),
+                    force: true
+                  }).execSync();
+                } catch (e) {
+                  return done(e);
+                }
+                return done();
+
               });
-
-              try {
-                Filesystem.writeSync({
-                  string: newGlobalsConfig,
-                  destination: path.resolve(projectDir, 'config', 'globals_1.0.js'),
-                  force: true
-                }).execSync();
-              } catch (e) {
-                return done(e);
-              }
-              return done();
             },
             error: done
           });
