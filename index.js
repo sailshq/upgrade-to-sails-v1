@@ -21,7 +21,8 @@ module.exports = (function() {
   console.log();
   console.log('----------------------------------------------------');
   console.log('This utility will kickstart the process of migrating');
-  console.log('a pre-Sails-1.0 app to Sails 1.0.x.');
+  console.log('a Sails v0.12.x app to Sails v1.0.x.');
+  console.log('It may work on pre v0.12.x apps, but no guarantees!');
   console.log('----------------------------------------------------');
   console.log();
 
