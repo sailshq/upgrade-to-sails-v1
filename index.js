@@ -470,9 +470,14 @@ module.exports = (function() {
             // Declare a var to hold the report.
             var report = [];
 
-            // First, do any models have instance methods on them?
+            // First, do any models have toJSON or other instance methods on them?
+            var modelsWithToJSON = [];
             var modelsWithInstanceMethods = _.reduce(models, function(memo, model) {
-              if (model.attributes && _.any(model.attributes, function(attribute) {
+              if (model.attributes && _.any(model.attributes, function(attribute, attributeName) {
+                if (attributeName === 'toJSON') {
+                  modelsWithToJSON.push(model.globalId);
+                  return;
+                }
                 return _.isFunction(attribute);
               })) {
                 memo.push(model.globalId);
@@ -481,9 +486,19 @@ module.exports = (function() {
             }, []);
 
             // If so, add something to the report.
+            if (modelsWithToJSON.length) {
+              report.push(figlet.textSync('toJSON attributes', {font: 'Calvin S'}));
+              report.push('In Sails 1.0, the toJSON attribute is no longer supported.\n'+
+                          'You can replace it with a `customToJSON` method on the model class.\n'+
+                          'See http://sailsjs.com/docs/concepts/models-and-orm/model-settings for more info.\n\n'+
+                          'You\'ll need to remove toJSON attributes from the following models:\n\n'+
+                          _.map(modelsWithToJSON, function(modelName) { return '* "' + modelName + '" in api/models/'+modelName+'.js'; }).join('\n'));
+            }
+
             if (modelsWithInstanceMethods.length) {
-              report.push(figlet.textSync('model methods', {font: 'Calvin S'}));
-              report.push('In Sails 1.0, models may not longer have instance methods (including `toJSON`).\n'+
+              report.push(figlet.textSync('instance methods', {font: 'Calvin S'}));
+              report.push('In Sails 1.0, models may no longer have instance methods\n'+
+                          '(i.e. attributes defined as functions).\n'+
                           'You\'ll need to remove instance methods from the following models:\n\n'+
                           _.map(modelsWithInstanceMethods, function(modelName) { return '* "' + modelName + '" in api/models/'+modelName+'.js'; }).join('\n'));
             }
