@@ -10,6 +10,7 @@ var figlet = require('figlet');
 var includeAll = require('include-all');
 var Prompts = require('machinepack-prompts');
 var Filesystem = require('machinepack-fs');
+var sailsGen = require('sails-generate');
 
 var INVALID_VALIDATIONS = require('./invalid-validations');
 
@@ -446,6 +447,37 @@ module.exports = (function() {
         });
 
       }
+
+
+      //  ┌─┐┌─┐┬┬  ┌─┐ ┬┌─┐  ┬┌─┐
+      //  └─┐├─┤││  └─┐ ││ │  │└─┐
+      //  └─┘┴ ┴┴┴─┘└─┘o┴└─┘o└┘└─┘
+
+      tasks.push(function(done) {
+
+        Prompts.confirm({
+          message: 'If your app uses (or plans to use) websockets, you should update your `sails.io.js`\n'+
+                   'file to the latest version.  We can do that for you.\n\n'+
+                   'Update your `sails.io.js` file now?'
+        }).exec({
+          no: function() {
+            console.log('Okay, no problem.  You may need to update the `transports` setting in');
+            console.log('your config/sockets.js file.  See http://bit.ly/sails_migration_websockets');
+            console.log('for more info.\n');
+            return done();
+          },
+          success: function() {
+            console.log('Okay -- updating now!\n');
+            var scope = {
+              rootPath: process.cwd(),
+              generatorType: 'sails.io.js'
+            };
+            return sailsGen(scope, done);
+          },
+          error: done
+        });
+
+      });
 
       //  ┌─┐┬ ┬┌─┐┌─┐┌─┐┌─┐┌┬┐┬┌─┐┌┐┌┌─┐
       //  └─┐│ ││ ┬│ ┬├┤ └─┐ │ ││ ││││└─┐
