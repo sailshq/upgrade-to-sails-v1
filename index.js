@@ -580,10 +580,14 @@ module.exports = (function() {
 
             var addRegex = new RegExp('\\.(' + collectionAttributes.join('|') + ')\\.add\\(');
             var removeRegex = new RegExp('\\.(' + collectionAttributes.join('|') + ')\\.remove\\(');
+            var connectionsRegex = new RegExp('\\Wconnections:');
+            var connectionRegex = new RegExp('\\Wconnection:');
 
             // Set up various subreports
             var addRemoveSaveCalls = [];
             var csrfTokenPathRefs = false;
+            var configFilesWithConnections = [];
+            var configFilesWithConnection = [];
 
             // Start walking the codez
             var walker = walk.walk(projectDir, { filters: ['node_modules', '.tmp'] });
@@ -623,6 +627,16 @@ module.exports = (function() {
 
                 }
 
+                // Look for `connections:` and `connection:` in config files.
+                if (root.match(path.join(projectDir, 'config'))) {
+                  if (line.match(connectionsRegex) && !line.match(/\s*\/\//)) {
+                    configFilesWithConnections.push(path.join(relativeRoot, stats.name) + ':' + (lineNum + 1));
+                  }
+                  if (line.match(connectionRegex) && !line.match(/\s*\/\//) && !line.match('connection: null')) {
+                    configFilesWithConnection.push(path.join(relativeRoot, stats.name) + ':' + (lineNum + 1));
+                  }
+                }
+
                 // Look for references to `/csrfToken` (that aren't commented out)
                 if (line.match('/csrfToken') && !line.match(/^\s*\/\//) && !line.match(/^\s*\*/)) {
                   csrfTokenPathRefs = true;
@@ -636,6 +650,18 @@ module.exports = (function() {
             });
 
             walker.on('end', function() {
+              if (configFilesWithConnections.length || configFilesWithConnection.length) {
+                report.push(figlet.textSync('database config', {font: 'Calvin S'}));
+                report.push('In Sails 1.0, the `connections` config has been replaced with `datastores`,\n' +
+                            'and the `models.connection` config has been replaced with `models.datastore.\n' +
+                            'It looks like there are still some config files that need to be changed:');
+                _.each(configFilesWithConnections, function(instance) {
+                  report.push('* In ' + instance + ', change `connections:` to `datastores:`');
+                });
+                _.each(configFilesWithConnection, function(instance) {
+                  report.push('* In ' + instance + ', change `connection:` to `datastore:`');
+                });
+              }
 
               if (csrfTokenPathRefs === true) {
                 report.push(figlet.textSync('csrfToken route', {font: 'Calvin S'}));
