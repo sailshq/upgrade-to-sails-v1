@@ -653,7 +653,7 @@ module.exports = (function() {
               if (configFilesWithConnections.length || configFilesWithConnection.length) {
                 report.push(figlet.textSync('database config', {font: 'Calvin S'}));
                 report.push('In Sails 1.0, the `connections` config has been replaced with `datastores`,\n' +
-                            'and the `models.connection` config has been replaced with `models.datastore.\n' +
+                            'and the `models.connection` config has been replaced with `models.datastore`.\n' +
                             'It looks like there are still some config files that need to be changed:');
                 _.each(configFilesWithConnections, function(instance) {
                   report.push('* In ' + instance + ', change `connections:` to `datastores:`');
