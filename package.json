@@ -1,5 +1,5 @@
 {
-  "name": "@sailshq/sails-generate-migrate-app",
+  "name": "@sailshq/migrate",
   "version": "1.0.0",
   "description": "A tool to help migrate Sails apps to version 1.0",
   "main": "index.js",
