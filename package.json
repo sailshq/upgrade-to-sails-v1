@@ -1,6 +1,6 @@
 {
   "name": "@sailshq/upgrade",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A tool to help upgrade Sails apps to version 1.0",
   "main": "index.js",
   "author": "sgress454",
