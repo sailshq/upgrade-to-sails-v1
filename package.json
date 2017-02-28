@@ -1,7 +1,7 @@
 {
-  "name": "@sailshq/migrate",
+  "name": "@sailshq/upgrade",
   "version": "1.0.0",
-  "description": "A tool to help migrate Sails apps to version 1.0",
+  "description": "A tool to help upgrade Sails apps to version 1.0",
   "main": "index.js",
   "author": "sgress454",
   "license": "MIT",
