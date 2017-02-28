@@ -470,7 +470,10 @@ module.exports = (function() {
             console.log('Okay -- updating now!\n');
             var scope = {
               rootPath: process.cwd(),
-              generatorType: 'sails.io.js'
+              generatorType: 'sails.io.js',
+              modules: {
+                'sails.io.js': require('sails-generate/lib/core-generators/sails.io.js')
+              }
             };
             return sailsGen(scope, done);
           },
