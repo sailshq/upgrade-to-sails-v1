@@ -505,6 +505,24 @@ module.exports = (function() {
             // Declare a var to hold the report.
             var report = [];
 
+            // Let's take a look at the blueprints config.
+            var blueprintsConfig = (function() {
+              try {
+                return require(path.resolve(projectDir, 'config', 'blueprints')).blueprints;
+              } catch (e) {
+                return {};
+              }
+            })();
+
+            // If they don't have an `actions` value set, warn that the default has flipped.
+            if (blueprintsConfig && _.isUndefined(blueprintsConfig.actions)) {
+              report.push(figlet.textSync('blueprints config', {font: 'Calvin S'}));
+              report.push('In Sails 1.0, the `actions` blueprint routes are turned _off_ by default.\n'+
+                          'This is a change from v0.12.x, so if you\'re relying on Sails to create\n'+
+                          'a route for each of your custom controller actions automatically, be sure\n'+
+                          'to set `actions` to `true` in your config/blueprints.js file.');
+            }
+
             // First, do any models have toJSON or other instance methods on them?
             var modelsWithToJSON = [];
             var modelsWithInstanceMethods = _.reduce(models, function(memo, model) {
