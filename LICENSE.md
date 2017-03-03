@@ -1,0 +1,32 @@
+The Sails Flagship / Enterprise Edition (EE) license (the "Flagship license")
+Copyright (c) 2017 The Sails Company ("Sails")
+
+This software and associated documentation files (the "Software") may only be
+used if you (and any entity that you represent) have agreed to, and are in
+compliance with, the Sails Flagship Agreement, available at
+https://sailsjs.com/terms/flagship (the “Flagship Terms” or "Sails Flagship
+Subscription Terms of Service" or "Flagship Terms of Service"), and otherwise
+have a valid Sails Flagship subscription for the correct number of
+user seats. Subject to the foregoing sentence, you are free to modify this
+Software and publish patches to the Software. You agree that Sails and/or its
+licensors (as applicable) retain all right, title and interest in and to all
+Software incorporated in such modifications and/or patches, and all such
+Software may only be used, copied, modified, displayed, distributed, or
+otherwise exploited with a valid Sails Flagship subscription for the
+correct number of user seats.  Subject to the foregoing, it is forbidden to
+copy, merge, publish, distribute, sublicense, and/or sell the Software.
+
+This Flagship License applies only to the part of this Software that is not
+distributed as part of Sails Community Edition (CE), and that is not a file
+that produces client-side JavaScript, in whole or in part. Any part of this
+Software distributed as part of Sails CE or that is a file that produces
+client-side JavaScript, in whole or in part, is copyrighted under the MIT
+license. The full text of this EE License shall be included in all copies or
+substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
