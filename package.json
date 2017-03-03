@@ -1,10 +1,10 @@
 {
   "name": "@sailshq/upgrade",
   "version": "1.0.2",
-  "description": "A tool to help upgrade Sails apps to version 1.0",
+  "description": "A tool to help upgrade Sails apps to version 1.0.",
   "main": "index.js",
-  "author": "sgress454",
-  "license": "MIT",
+  "author": "The Sails Company",
+  "license": "Sails Flagship license",
   "dependencies": {
     "@sailshq/lodash": "^3.10.2",
     "async": "2.1.4",
