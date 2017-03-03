@@ -23,4 +23,4 @@ and then follow the prompts!
 
 ## License
 
-See LICENSE.md
+See [LICENSE](./LICENSE)
