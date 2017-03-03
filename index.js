@@ -353,6 +353,7 @@ module.exports = (function() {
           filter: /^([^.]+)\.(?:(?!md|txt).)+$/,
           replaceExpr : /^.*\//,
         }, function(err, _models) {
+          if (err) { return done(err); }
           models = _models;
           return done();
         });
@@ -405,7 +406,7 @@ module.exports = (function() {
 
               // Fill out the template with the appropriate values based on the project's existing global config.
               var newDatastoresConfig = _.template(datastoresConfigTemplate)({
-                datastores: jsBeautify('  ' + datastoresStr, {indent_level: 2, indent_size: 2})
+                datastores: jsBeautify('  ' + datastoresStr, {indent_level: 2, indent_size: 2})// eslint-disable-line camelcase
               });
 
               try {
@@ -611,7 +612,7 @@ module.exports = (function() {
 
               // If it's not a Javascript or EJS file, skip it.
               if (!stats.name.match(/\.(js|ejs)$/)) {
-                 return next();
+                return next();
               }
 
               // Read the file in.
