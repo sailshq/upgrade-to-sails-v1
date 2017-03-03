@@ -1,23 +1,15 @@
 {
-  //////////////////////////////////////////////////////////////////////
   //    ┬┌─┐╦ ╦╦╔╗╔╔╦╗┬─┐┌─┐
   //    │└─┐╠═╣║║║║ ║ ├┬┘│
   //  o└┘└─┘╩ ╩╩╝╚╝ ╩ ┴└─└─┘
   //
-  // > JavaScript code conventions for your Sails app.
-  //
-  // This file (`.jshintrc`) exists to help with quality of code
-  // throughout your Sails app.  For the sake of convention, the
-  // Sails team's recommended settings are included here out of
-  // the box.  But, of course, feel free to change these settings
-  // as you see fit.
+  // This file (`.jshintrc`) exists to help with consistency of code
+  // throughout this package, and throughout Sails and the Node-Machine project.
   //
   // To review what each of these options mean, see:
   // http://jshint.com/docs/options
   //
   // (or: https://github.com/jshint/jshint/blob/master/examples/.jshintrc)
-  //
-  //////////////////////////////////////////////////////////////////////
 
 
 

@@ -4,17 +4,25 @@
   "description": "A tool to help upgrade Sails apps to version 1.0.",
   "main": "index.js",
   "author": "The Sails Company",
-  "license": "Sails Flagship license",
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": "https://github.com/sailshq/upgrade",
   "dependencies": {
     "@sailshq/lodash": "^3.10.2",
-    "async": "2.1.4",
+    "async": "2.0.1",
     "figlet": "1.2.0",
     "include-all": "^2.0.0",
     "js-beautify": "1.6.8",
     "machinepack-fs": "^8.0.2",
-    "machinepack-prompts": "^0.5.0",
+    "machinepack-prompts": "0.5.0",
     "sails-generate": "^1.9.0",
-    "semver": "5.3.0",
+    "semver": "4.3.6",
     "walk": "2.3.9"
+  },
+  "devDependencies": {
+    "eslint": "3.5.0"
+  },
+  "scripts": {
+    "test": "npm run lint",
+    "lint": "node ./node_modules/eslint/bin/eslint **/*.js *.js"
   }
 }
