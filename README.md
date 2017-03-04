@@ -20,7 +20,19 @@ sails upgrade
 
 and then follow the prompts!
 
+## Bugs
+
+Please report suspected bugs [here](https://flagship.sailsjs.com).
+
+## Help
+
+If you have any questions or need assistance, let us know [here](https://flagship.sailsjs.com) and we'll get back to you within one business day.
+
+## Contributing
+
+Contributions in the form of code, documentation, bug reports, and community support for Flagship packages are all welcome!  Pull requests to Flagship repositories are governed by the Sails Flagship agreement.  For general best practices and code of conduct, see http://sailsjs.com/documentation/contributing.
+
 
 ## License
 
-See [LICENSE](./LICENSE)
+See [LICENSE](./LICENSE).
