@@ -498,6 +498,12 @@ module.exports = (function() {
             // Declare a var to hold the report.
             var report = [];
 
+            /***************************************************************************
+            *                                                                          *
+            * Check for blueprint `actions` config setting.                            *
+            *                                                                          *
+            ***************************************************************************/
+
             // Let's take a look at the blueprints config.
             var blueprintsConfig = (function() {
               try {
@@ -516,7 +522,13 @@ module.exports = (function() {
                           'to set `actions` to `true` in your config/blueprints.js file.');
             }
 
-            // First, do any models have toJSON or other instance methods on them?
+            /***************************************************************************
+            *                                                                          *
+            * Check for toJSON and other model instance methods.                       *
+            *                                                                          *
+            ***************************************************************************/
+
+            // Do any models have toJSON or other instance methods on them?
             var modelsWithToJSON = [];
             var modelsWithInstanceMethods = _.reduce(models, function(memo, model) {
               if (model.attributes && _.any(model.attributes, function(attribute, attributeName) {
@@ -549,6 +561,12 @@ module.exports = (function() {
                           _.map(modelsWithInstanceMethods, function(modelName) { return '* "' + modelName + '" in api/models/'+modelName+'.js'; }).join('\n'));
             }
 
+            /***************************************************************************
+            *                                                                          *
+            * Check for non-EJS view engines.                                          *
+            *                                                                          *
+            ***************************************************************************/
+
             // Alright, let's take a look at the views config.
             var viewsConfig = (function() {
               try {
@@ -566,6 +584,17 @@ module.exports = (function() {
                           'update your `config/views.js` file accordingly.\n\n'+
                           'See http://bit.ly/sails_migration_views for more info.');
             }
+
+            /***************************************************************************
+            *                                                                          *
+            * Now walk through the code files looking for trouble.                     *
+            *                                                                          *
+            * This checks for `.add()`, `.remove()` and `.save()` calls, as well as    *
+            * `sails.config.connections` references, references to the `/csrfToken`    *
+            * route, deprecated/removed model attribute validations, and calls to      *
+            * removed PubSub methods like `.publishAdd()`.                             *
+            *                                                                          *
+            ***************************************************************************/
 
             // Declare a var to hold a list of `collection` attributes in models
             // so we can look for `.add` and `.remove` calls.
