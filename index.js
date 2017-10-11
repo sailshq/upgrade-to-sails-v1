@@ -52,7 +52,7 @@ module.exports = (function() {
         }
       })();
 
-      // Load up the existing `config/globals.js` file, if any.
+      // Load up the existing `config/models.js` file, if any.
       var modelsConfig = (function() {
         try {
           return require(path.resolve(projectDir, 'config', 'models')).models;
