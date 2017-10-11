@@ -699,11 +699,23 @@ module.exports = (function() {
               }
 
               // Look for `connections:` and `connection:` in config files.
-              if (root.match(path.join(projectDir, 'config'))) {
+              if (root.match(path.join(projectDir, 'config')) || root.match(path.join(projectDir, 'api', 'models'))) {
                 if (line.match(connectionsRegex) && !line.match(/\s*\/\//)) {
                   configFilesWithConnections.push(path.join(relativeRoot, stats.name) + ':' + (lineNum + 1));
                 }
                 if (line.match(connectionRegex) && !line.match(/\s*\/\//) && !line.match('connection: null')) {
+                  // If this is the config/models.js file, and we created a models_1.0 file with connection: null, ignore it.
+                  if (path.join(relativeRoot, stats.name) === 'config/models.js') {
+                    try {
+                      var newModelsConfig = require(path.resolve(projectDir, 'config', 'models_1.0'));
+                      if (newModelsConfig.models && newModelsConfig.models.connection === null) {
+                        return;
+                      }
+                    }
+                    catch (e) {
+                      // do nothing.
+                    }
+                  }
                   configFilesWithConnection.push(path.join(relativeRoot, stats.name) + ':' + (lineNum + 1));
                 }
               }
