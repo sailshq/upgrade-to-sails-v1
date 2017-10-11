@@ -680,19 +680,21 @@ module.exports = (function() {
                 if (line.match(addRegex)) {
                   addRemoveSaveCalls.push('.add() in ' + path.join(relativeRoot, stats.name) + ':' + (lineNum + 1));
                 }
-                if (line.match(removeRegex)) {
-                  addRemoveSaveCalls.push('.remove() in ' + path.join(relativeRoot, stats.name) + ':' + (lineNum + 1));
-                }
-                if (line.match('\\.save\\(')) {
-                  addRemoveSaveCalls.push('.save() in ' + path.join(relativeRoot, stats.name) + ':' + (lineNum + 1));
-                }
-                if (line.match(pubSubRegex)) {
-                  (function() {
-                    var match = line.match(pubSubRegex);
-                    var model = match[1];
-                    var method = match[2];
-                    pubSubCalls.push('.' + method + '() in ' + path.join(relativeRoot, stats.name) + ':' + (lineNum + 1));
-                  })();
+                if (!root.match(path.join(projectDir, 'config'))) {
+                  if (line.match(removeRegex)) {
+                    addRemoveSaveCalls.push('.remove() in ' + path.join(relativeRoot, stats.name) + ':' + (lineNum + 1));
+                  }
+                  if (line.match('\\.save\\(')) {
+                    addRemoveSaveCalls.push('.save() in ' + path.join(relativeRoot, stats.name) + ':' + (lineNum + 1));
+                  }
+                  if (line.match(pubSubRegex)) {
+                    (function() {
+                      var match = line.match(pubSubRegex);
+                      var model = match[1];
+                      var method = match[2];
+                      pubSubCalls.push('.' + method + '() in ' + path.join(relativeRoot, stats.name) + ':' + (lineNum + 1));
+                    })();
+                  }
                 }
               }
 
