@@ -805,6 +805,7 @@ module.exports = (function() {
                 '==================================================\n\n'+
                 'This report highlights various issues that may need to be addressed before your app will work with Sails 1.0.\n' +
                 'After implementing these suggestions, some good next steps are:\n' +
+                '* Address the issues in this report, and run the updater again with --reportOnly to regenerate the report.\n  Repeat until there are no more issues!\n' +
                 '* Review the full migration guide at: https://github.com/balderdashy/sails-docs/blob/1.0/upgrading/To1.0.md\n' +
                 '* Attempt to lift and run your app with Sails 1.0.\n' +
                 '* See http://sailsjs.com/support for support options!\n'
