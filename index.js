@@ -832,7 +832,7 @@ module.exports = (function() {
               console.log(report.join('\n\n'));
               console.log();
               console.log('--------------------------------------------------------------------------------------------------------');
-              console.log('Saved this migration report to ' + path.resolve(projectDir, 'sails_1.0_migration_report.txt') + '!');
+              console.log('Saved this migration report to ' + path.resolve(projectDir, 'sails_1.0_migration_report.txt'));
               console.log('--------------------------------------------------------------------------------------------------------');
             }
             else {
