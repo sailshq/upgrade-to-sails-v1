@@ -67,7 +67,6 @@ module.exports = (function() {
         try {
           return require(path.resolve(projectDir, 'config', 'connections-old.js.txt')).connections;
         } catch (e) {
-          console.log(e);
           try {
             return require(path.resolve(projectDir, 'config', 'connections')).connections;
           } catch (e2) {
