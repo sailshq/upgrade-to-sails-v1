@@ -311,11 +311,11 @@ module.exports = (function() {
 
         Prompts.confirm({
           message: 'If your app uses models, you will likely need to update your `config/models.js`\n'+
-                   'before lifting with Sails 1.0.  We can add a new `config/models_1.0.js` file for now\n'+
+                   'before lifting with Sails 1.0.  We can add a new `config/models_1_0.js` file for now\n'+
                    'which should allow your app to lift, and then when you\'re ready you merge that\n'+
                    'file with your existing `config/models.js`.\n\n'+
                    'See http://bit.ly/sails_migration_model_config for more info.\n\n'+
-                   'Create a new `config/models_1.0.js file now?'
+                   'Create a new `config/models_1_0.js file now?'
         }).exec({
           no: function() {
             console.log('Okay, but your app may not lift without it!\n');
@@ -339,7 +339,7 @@ module.exports = (function() {
             try {
               Filesystem.writeSync({
                 string: newModelsConfig,
-                destination: path.resolve(projectDir, 'config', 'models_1.0.js'),
+                destination: path.resolve(projectDir, 'config', 'models_1_0.js'),
                 force: true
               }).execSync();
             } catch (e) {
@@ -713,10 +713,10 @@ module.exports = (function() {
                   configFilesWithConnections.push(path.join(relativeRoot, stats.name) + ':' + (lineNum + 1));
                 }
                 if (line.match(connectionRegex) && !line.match(/\s*\/\//) && !line.match('connection: null')) {
-                  // If this is the config/models.js file, and we created a models_1.0 file with connection: null, ignore it.
+                  // If this is the config/models.js file, and we created a models_1_0 file with connection: null, ignore it.
                   if (path.join(relativeRoot, stats.name) === 'config/models.js') {
                     try {
-                      var newModelsConfig = require(path.resolve(projectDir, 'config', 'models_1.0'));
+                      var newModelsConfig = require(path.resolve(projectDir, 'config', 'models_1_0'));
                       if (newModelsConfig.models && newModelsConfig.models.connection === null) {
                         return;
                       }
