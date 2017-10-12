@@ -1,6 +1,6 @@
 # @sailshq/upgrade
 
-A tool to help migrate Sails apps to version 1.0.
+A tool to help migrate Sails v0.12 apps to Sails version 1.0.
 
 ## Usage
 
@@ -20,19 +20,13 @@ sails upgrade
 
 and then follow the prompts!
 
-## Bugs
+## Bugs / Help
 
-Please report suspected bugs [here](https://flagship.sailsjs.com).
+Please report suspected bugs [here](https://sailsjs.com/bugs).
 
-## Help
-
-If you have any questions or need assistance, let us know [here](https://flagship.sailsjs.com) and we'll get back to you within one business day.
-
-## Contributing
-
-Contributions in the form of code, documentation, bug reports, and community support for Flagship packages are all welcome!  Pull requests to Flagship repositories are governed by the Sails Flagship agreement.  For general best practices and code of conduct, see http://sailsjs.com/documentation/contributing.
+> If you are a Flagship edition customer, and have any questions or need assistance, let us know [here](https://flagship.sailsjs.com) and we'll get back to you within one business day.
 
 
 ## License
 
-See [LICENSE](./LICENSE).
+MIT
