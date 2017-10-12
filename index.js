@@ -1,4 +1,5 @@
 var path = require('path');
+var crypto = require('crypto');
 var semver = require('semver');
 var async = require('async');
 var exec = require('child_process').exec;
@@ -333,7 +334,8 @@ module.exports = (function() {
             // Fill out the template with the appropriate values based on the project's existing global config.
             var newModelsConfig = _.template(modelsConfigTemplate)({
               datastore: modelsConfig.connection || 'default',
-              pkConfig: defaultDatastoreConfig && defaultDatastoreConfig.adapter === 'sails-mongo' ? '{ type: \'string\', columnName: \'_id\' }' : '{ type: \'number\', autoIncrement: true, }'
+              pkConfig: defaultDatastoreConfig && defaultDatastoreConfig.adapter === 'sails-mongo' ? '{ type: \'string\', columnName: \'_id\' }' : '{ type: \'number\', autoIncrement: true, }',
+              defaultDEK: crypto.randomBytes(32).toString('base64')
             });
 
             try {
@@ -699,7 +701,6 @@ module.exports = (function() {
                   if (line.match(pubSubRegex)) {
                     (function() {
                       var match = line.match(pubSubRegex);
-                      var model = match[1];
                       var method = match[2];
                       pubSubCalls.push('.' + method + '() in ' + path.join(relativeRoot, stats.name) + ':' + (lineNum + 1));
                     })();

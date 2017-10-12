@@ -44,6 +44,23 @@ module.exports.models = {
     // attribute to use as the primary key by setting the `primaryKey` setting on the model.
     // That setting defaults to `id`.
     id: <%= pkConfig %>
-  }
+  },
+
+  /******************************************************************************
+  *                                                                             *
+  * The set of DEKs (data encryption keys) for at-rest encryption.              *
+  * i.e. when encrypting/decrypting data for attributes with `encrypt: true`.   *
+  *                                                                             *
+  * > The `default` DEK is used for all new encryptions, but multiple DEKs      *
+  * > can be configured to allow for key rotation.  In production, be sure to   *
+  * > manage these keys like you would any other sensitive credential.          *
+  *                                                                             *
+  * > For more info, see:                                                       *
+  * > https://sailsjs.com/docs/concepts/orm/model-settings#?dataEncryptionKeys  *
+  *                                                                             *
+  ******************************************************************************/
+  dataEncryptionKeys: {
+    default: '<%= defaultDEK %>'
+  },
 
 };
