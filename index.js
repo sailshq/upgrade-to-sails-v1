@@ -806,6 +806,26 @@ module.exports = (function() {
                          );
             }
 
+            // Check for async/await support.
+            var RX_NODE_MAJOR_DOT_MINOR = /^v([^.]+\.?[^.]+)\./;
+            var isCurrentNodeVersionCapableOfAwait = process.version.match(RX_NODE_MAJOR_DOT_MINOR) && ( +(process.version.match(RX_NODE_MAJOR_DOT_MINOR)[1]) >= 7.9);
+            if(!isCurrentNodeVersionCapableOfAwait) {
+              report.push(figlet.textSync('node version', {font: 'Calvin S'}));
+              report.push('It looks like your current version of Node.js is '+process.version+'.\n' +
+                          '(or it was at the time this report was generated)\n\n' +
+                          'Sails works with all officially-supported versions of Node.js.\n' +
+                          'But it works *especially* well with Node versions 7.9 and up.\n\n' +
+                          'As of Sails v1.0, your app can now take advantage of the new `await` keyword,\n' +
+                          'instead of relying on callbacks or promise chaining (`.exec()`, `.then()`, etc.)\n' +
+                          'This new feature of Sails/Node.js/JavaScript makes your team more productive,\n' +
+                          'and it usually leads to more stable code with fewer bugs.\n\n' +
+                          'If you choose *not* to upgrade Node.js, you\'ll still be able to use Sails (of course!)\n' +
+                          'But we really recommend taking a moment to look into this.  It\'s fast and easy, and \n' +
+                          'we think you\'ll find it helps you build higher quality apps, faster than ever before.\n\n' +
+                          ' [?] If you\'re unsure or want advice, swing by https://sailsjs.com/support'
+                         );
+            }
+
             if (report.length) {
 
               report.unshift(
