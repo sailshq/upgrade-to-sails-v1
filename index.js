@@ -92,6 +92,12 @@ module.exports = (function() {
 
           if (scope.reportOnly) {return done();}
 
+          console.log('--------------------------------------------------------------------------------------------------------');
+          console.log('BEFORE PROCEEDING, it\'s a good idea to double-check that your app lifts using the currently-installed');
+          console.log('version of Sails, and fix any pre-existing problems before attempting to upgrade.');
+          console.log('--------------------------------------------------------------------------------------------------------');
+          console.log();
+
           Prompts.confirm({
             message: 'First things first -- looks like we need to install Sails 1.0.\n\n'+
                       'Is that okay?'
