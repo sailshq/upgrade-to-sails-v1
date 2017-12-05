@@ -90,7 +90,7 @@ module.exports = (function() {
 
         tasks.push(function(done) {
 
-        if (scope.reportOnly) {return done();}
+          if (scope.reportOnly) {return done();}
 
           Prompts.confirm({
             message: 'First things first -- looks like we need to install Sails 1.0.\n\n'+
@@ -241,7 +241,7 @@ module.exports = (function() {
 
         tasks.push(function(done) {
 
-        if (scope.reportOnly) {return done();}
+          if (scope.reportOnly) {return done();}
 
           Prompts.confirm({
             message: 'In order for your app to lift, your `config/globals.js` file needs to be updated.\n' +
