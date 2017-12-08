@@ -147,8 +147,8 @@ module.exports = (function() {
         packagesToInstall['sails-mongo'] = '^1.0.0-0';
       }
 
-      if (projectPackageJson.dependencies['socket.io-redis'] && !semver.satisfies(projectPackageJson.dependencies['socket.io-redis'].replace(/^\D+/,''), '^3.1.0')) {
-        packagesToInstall['socket.io-redis'] = '3.1.0';
+      if (projectPackageJson.dependencies['socket.io-redis'] && !semver.satisfies(projectPackageJson.dependencies['socket.io-redis'].replace(/^\D+/,''), '^5.2.0')) {
+        packagesToInstall['socket.io-redis'] = '5.2.0';
       }
 
       if (globalsConfig._ !== false && !projectPackageJson.dependencies['lodash']) {
