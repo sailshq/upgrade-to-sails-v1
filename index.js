@@ -685,7 +685,7 @@ module.exports = (function() {
 
           // For each file...
           walker.on('file', function (root, stats, next) {
-            var relativeRoot = root.replace(projectDir, '').replace(new RegExp('^' + path.sep), '');
+            var relativeRoot = root.replace(projectDir, '').replace(new RegExp('^' + _.escapeRegExp(path.sep)), '');
 
             // If it's not a Javascript or EJS file, skip it.
             if (!stats.name.match(/\.(js|ejs)$/)) {
