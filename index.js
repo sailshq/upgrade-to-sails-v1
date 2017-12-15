@@ -270,7 +270,11 @@ module.exports = (function() {
                 if (err) {
                   if (err.code === 'EEXIST') {
                     console.log('Detected an existing backed-up globals file, so keeping that one...');
-                  } else {
+                  }
+                  else if (err.exit === 'doesNotExist') {
+                    /* no-op */
+                  }
+                  else {
                     return done(err);
                   }
                 }
