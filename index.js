@@ -7,6 +7,7 @@ var _ = require('@sailshq/lodash');
 var jsBeautify = require('js-beautify');
 var walk = require('walk');
 var figlet = require('figlet');
+var chalk = require('chalk');
 
 var includeAll = require('include-all');
 var Prompts = require('machinepack-prompts');
@@ -498,7 +499,15 @@ module.exports = (function() {
                 'sails.io.js': require('sails-generate/lib/core-generators/sails.io.js')
               }
             };
-            return sailsGen(scope, done);
+            try {
+              return sailsGen(scope, done);
+            } catch (e) {
+              console.log(chalk.yellow.bold('We were unable to determine the current location of your `sails.io.js` file.'));
+              console.log(chalk.yellow('If you have one, you should replace it yourself later by running:'));
+              console.log(chalk.yellow('sails generate sails.io.js <path-to-your-sails.io.js>'));
+              console.log();
+              return done();
+            }
           },
           error: done
         });
